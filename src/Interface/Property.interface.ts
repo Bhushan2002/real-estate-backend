@@ -1,17 +1,17 @@
 // models/property.types.ts
 
-import { Document } from 'mongoose';
+import { Document } from "mongoose";
 
 // Enums to match the Dart code
 export enum PropertyType {
-  Apartment = 'Apartment',
-  House = 'House',
+  Apartment = "Apartment",
+  House = "House",
 }
 
 export enum FurnishedType {
-  FullyFurnished = 'fully-furnished',
-  SemiFurnished = 'semi-furnished',
-  Unfurnished = 'unfurnished',
+  FullyFurnished = "fully-furnished",
+  SemiFurnished = "semi-furnished",
+  Unfurnished = "unfurnished",
 }
 
 // Base interface for all properties
@@ -21,7 +21,11 @@ export interface IProperty extends Document {
   title: string;
   description: string;
   price: number;
-  location: string;
+  street: string;
+  city: string;
+  state: string;
+  country: string;
+  postalCode: string;
   images: string[];
   bedrooms: number;
   bathrooms: number;
@@ -31,6 +35,10 @@ export interface IProperty extends Document {
   ownerId: string; // Or Schema.Types.ObjectId if you have a User model
   amenities: string[];
   createdAt: Date;
+  coordinates: {
+    lat: number;
+    lon: number;
+  };
   updatedAt: Date;
 }
 

@@ -13,13 +13,16 @@ import {
 import { updateUserModel } from "./User.controller";
 import mongoose from "mongoose";
 import { IAuth, IAuthRequest } from "../Interface/Auth.interface";
+import { getCoordinates } from "../Function/Property.function";
 
 // create property
 export const createPropertyModel = async (req: IAuth, res: Response) => {
   try {
 
      const firebaseUid = req.user?.uid;
-    const userRole = req.user?.role; // Assumes you have a custom claim named 'role'
+    const userRole = req.user?.role; 
+
+
 
     // 2. Authorize the user: only 'owner' can create properties
     if (!firebaseUid) {
@@ -30,16 +33,29 @@ export const createPropertyModel = async (req: IAuth, res: Response) => {
     }
 
 
-    const { type, ...rest } = req.body;
-
+    // const { type, ...rest } = req.body;
+    
+    const {type, street,city, state, country, postalCode, ...rest}=req.body;
 
     if (!type) {
       return res.status(400).json({ message: "Property type is required." });
     }
+
+    const address = {type, street, city,state, country,  postalCode};
+    const coordinates = await getCoordinates(address);
+
+
+    console.log("Coordinates fetched:", coordinates);
     const propertyData = {
       ...rest,
       type,
       ownerId: firebaseUid, // <-- Using Firebase UID as the owner identifier
+      street,
+      city,
+      state,
+      country,
+      postalCode,
+      coordinates,
     };
 
       
@@ -151,3 +167,4 @@ export const getOwnerProperty = async (req: IAuthRequest, res: Response)=>{
     res.status(500).json({message: e});
   }
 }
+

@@ -13,15 +13,29 @@ const propertySchema = new Schema<IProperty>({
   title: { type: String, required: true, trim: true },
   description: { type: String, required: true, trim: true },
   price: { type: Number, required: true, min: 0 },
-  location: { type: String, required: true },
+  street: { type: String, required: true },
+  city: { type: String, required: true },
+  state: { type: String, required: true },
+  country: { type: String, required: true },
+  postalCode: { type: String, required: true },
   images: { type: [String], required: true, default: [] },
   bedrooms: { type: Number, required: true, min: 0 },
   bathrooms: { type: Number, required: true, min: 0 },
   bhk: { type: Number, required: true, min: 0 },
   area: { type: Number, required: true, min: 0 },
   isAvailable: { type: Boolean, default: true },
+  coordinates:{
+    type:{
+      lat: {type: Number},
+      lon: {type: Number},
+    
+    },
+    default: null
+
+  },
   // Assuming you have a User model, you would link it like this:
   ownerId: { type: String, ref: 'User', required: true },
+
   // ownerId: { type: String, required: true },
   amenities: { type: [String], default: [] },
 }, {
