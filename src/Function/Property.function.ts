@@ -25,8 +25,12 @@ export async function getCoordinates(address: Address): Promise<{ lat: number; l
         format: 'json',
         limit: 1,
       },
+      timeout: 5000,
+      headers:{
+        'User-Agent': 'RentPropertyApp/1.0 (bwaghode321@gmail.com)',
+      }
     });
-
+    console.log('Nominatim response data:', response.data);
     if (response.data && response.data.length > 0) {
       const { lat, lon } = response.data[0];
       console.log('Coordinates:', lat, lon);

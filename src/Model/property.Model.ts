@@ -1,54 +1,57 @@
 // models/property.model.ts
 
-import { Schema, model, Model } from 'mongoose';
-import { IApartment, IHouse, IProperty, PropertyType } from '../Interface/Property.interface';
-
+import { Schema, model, Model } from "mongoose";
+import {
+  IApartment,
+  IHouse,
+  IProperty,
+  PropertyType,
+} from "../Interface/Property.interface";
 
 // Options for the discriminator key
-const discriminatorKey = 'type';
+const discriminatorKey = "type";
 
 // 1. BASE PROPERTY SCHEMA
 // This schema includes all fields that are common to all property types.
-const propertySchema = new Schema<IProperty>({
-  title: { type: String, required: true, trim: true },
-  description: { type: String, required: true, trim: true },
-  price: { type: Number, required: true, min: 0 },
-  street: { type: String, required: true },
-  city: { type: String, required: true },
-  state: { type: String, required: true },
-  country: { type: String, required: true },
-  postalCode: { type: String, required: true },
-  images: { type: [String], required: true, default: [] },
-  bedrooms: { type: Number, required: true, min: 0 },
-  bathrooms: { type: Number, required: true, min: 0 },
-  bhk: { type: Number, required: true, min: 0 },
-  area: { type: Number, required: true, min: 0 },
-  isAvailable: { type: Boolean, default: true },
-  coordinates:{
-    type:{
-      lat: {type: Number},
-      lon: {type: Number},
-    
+const propertySchema = new Schema<IProperty>(
+  {
+    title: { type: String, required: true, trim: true },
+    description: { type: String, required: true, trim: true },
+    price: { type: Number, required: true, min: 0 },
+    street: { type: String, required: true },
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+    country: { type: String, required: true },
+    postalCode: { type: String, required: true },
+    images: { type: [String], required: true, default: [] },
+    bedrooms: { type: Number, required: true, min: 0 },
+    bathrooms: { type: Number, required: true, min: 0 },
+    bhk: { type: Number, required: true, min: 0 },
+    area: { type: Number, required: true, min: 0 },
+    isAvailable: { type: Boolean, default: true },
+    coordinates: {
+      type: {
+        lat: { type: Number },
+        lon: { type: Number },
+      },
     },
-    default: null
+    // Assuming you have a User model, you would link it like this:
+    ownerId: { type: String, ref: "User", required: true },
 
+    // ownerId: { type: String, required: true },
+    amenities: { type: [String], default: [] },
   },
-  // Assuming you have a User model, you would link it like this:
-  ownerId: { type: String, ref: 'User', required: true },
-
-  // ownerId: { type: String, required: true },
-  amenities: { type: [String], default: [] },
-}, {
-  // Mongoose will automatically add `createdAt` and `updatedAt` fields
-  timestamps: true,
-  // This is the key that will differentiate between Apartments and Houses
-  discriminatorKey: discriminatorKey,
-});
+  {
+    // Mongoose will automatically add `createdAt` and `updatedAt` fields
+    timestamps: true,
+    // This is the key that will differentiate between Apartments and Houses
+    discriminatorKey: discriminatorKey,
+  }
+);
 
 // 2. BASE PROPERTY MODEL
 // We create the base model from the schema.
-export const Property = model<IProperty>('Property', propertySchema);
-
+export const Property = model<IProperty>("Property", propertySchema);
 
 // 3. APARTMENT MODEL (using a discriminator)
 // This model will be stored in the SAME collection as 'Property'
@@ -73,7 +76,7 @@ export const House: Model<IHouse> = Property.discriminator<IHouse>(
     floors: { type: Number, default: 1 },
     hasGarden: { type: Boolean, default: false },
     hasPool: { type: Boolean, default: false },
-  landArea: { type: Number, min: 0 },
+    landArea: { type: Number, min: 0 },
     isFurnished: { type: Boolean, default: false },
   })
 );

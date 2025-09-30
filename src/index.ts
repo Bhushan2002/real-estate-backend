@@ -2,6 +2,7 @@ import express from "express";
 import { connectDatabase } from "./utils/db";
 import userRoutes from "../src/Routes/User.routes";
 import propertRoutes from "../src/Routes/Property.route";
+import messageRoutes from '../src/Routes/Message.routes';
 import { Response } from 'express';
 var admin = require("firebase-admin");
 
@@ -49,7 +50,7 @@ app.get('/api/users/:userId', async(req: any, res: any)=>{
 
 app.use("/user", userRoutes);
 app.use("/properties", propertRoutes);
-
+app.use('/message',messageRoutes)
 //listeners
 app.listen(port, () => {
   console.log(`connected at ${port}`);

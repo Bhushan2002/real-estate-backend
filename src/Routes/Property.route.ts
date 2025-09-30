@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {   allPropertyModel, createPropertyModel, getOwnerProperty, updatePropertyModel } from "../Controller/Property.controller";
+import {   allPropertyModel, createPropertyModel, getOwnerProperty, getPropertyByCity, updatePropertyModel } from "../Controller/Property.controller";
 import { firebaseAuthMiddleware } from "../middleware/firebaseAuth";
 import multer from "multer";
 
@@ -11,5 +11,6 @@ const update = multer().array('images',10);
 router.post('/createproperty',firebaseAuthMiddleware, update,createPropertyModel);
 router.route('/all-properties').get(allPropertyModel);
 router.route('/:id').put(update,updatePropertyModel);
-router.get('/ownerproperties',firebaseAuthMiddleware,getOwnerProperty)
+router.get('/ownerproperties',firebaseAuthMiddleware,getOwnerProperty);
+router.get('/:city',getPropertyByCity);
 export default router;
