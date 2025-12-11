@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Property } from "../Model/property.Model";
+import { Apartment, Property } from "../Model/property.Model";
 import {
   ErrorHandler,
   ServerErrorHandler,
@@ -13,6 +13,7 @@ import {
 
 import { IAuth, IAuthRequest } from "../Interface/Auth.interface";
 import { getCoordinates } from "../Function/Property.function";
+import { PropertyFilter } from "../Interface/PropertyFilter.interface";
 
 // create property
 export const createPropertyModel = async (req: IAuth, res: Response) => {
@@ -185,5 +186,78 @@ export const getPropertyByCity = async (req: IAuthRequest, res: Response) => {
       .json({ message: `properties in ${city} city.`, properties });
   } catch (e) {
     res.status(500).json({ message: e });
+  }
+};
+
+// export const getPropertyByFilters = async(req: Request, res: Response)=>{
+//   try{
+//     const query = req.query;
+
+//     const filteredProperty = await Property.find({
+//       where:{
+//         price: {
+//           gte: query.minPrice || 0,
+//           lte: query.maxPrice|| 1000000
+//         },
+//         bhk: query.bhk,
+//       }
+//     });
+//     console.log(filteredProperty);
+//     if (filteredProperty == null){
+//       res.status(400).json({message: "no Property found"})
+//     }
+//     else{
+//       res.status(200).json({filteredProperty})
+//     }
+//   }
+//   catch(e){
+//     res.status(400).json({message: "something went worng."})
+//   }
+// }
+
+export const getPropertyByFilters = async (req: Request, res: Response) => {
+  try {
+    const query = req.query ;
+    
+    // Build filter object dynamically
+    const whereClause: any = {
+      price: {
+        gte: query.minPrice ? Number(query.minPrice) : 0,
+        lte: query.maxPrice ? Number(query.maxPrice) : 1000000
+      }
+    };
+
+    // Only add bhk filter if provided
+    if (query.bhk) {
+      whereClause.bhk = Number(query.bhk);
+    }
+
+    const filteredProperties = await Property.find({
+      where: whereClause
+    });
+
+    console.log(filteredProperties);
+
+    if (!filteredProperties || filteredProperties.length === 0) {
+      return res.status(404).json({ 
+        success: false,
+        message: "No properties found matching the criteria",
+        data: []
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Properties retrieved successfully",
+      data: filteredProperties,
+      count: filteredProperties.length
+    });
+  } catch (error) {
+    console.error('Error fetching properties:', error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      
+    });
   }
 };

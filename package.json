@@ -12,8 +12,10 @@
   "license": "ISC",
   "dependencies": {
     "@types/axios": "^0.9.36",
+    "@types/cors": "^2.8.19",
     "@types/multer": "^2.0.0",
     "axios": "^1.11.0",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "firebase-admin": "^13.5.0",

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {   allPropertyModel, createPropertyModel, getOwnerProperty, getPropertyByCity, updatePropertyModel } from "../Controller/Property.controller";
+import {   allPropertyModel, createPropertyModel, getOwnerProperty, getPropertyByCity, getPropertyByFilters, updatePropertyModel } from "../Controller/Property.controller";
 import { firebaseAuthMiddleware } from "../middleware/firebaseAuth";
 import multer from "multer";
 
@@ -13,4 +13,5 @@ router.route('/all-properties').get(allPropertyModel);
 router.route('/:id').put(update,updatePropertyModel);
 router.get('/ownerproperties',firebaseAuthMiddleware,getOwnerProperty);
 router.get('/:city',getPropertyByCity);
+router.get('/filter',getPropertyByFilters)
 export default router;
